@@ -5,6 +5,8 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <string.h>
+#include <vector>
+#include <stdio.h>
 
 using namespace std;
 
@@ -19,6 +21,7 @@ int main() {
     char* cmnd = 0;
     char* cmd[40];
     char input[50];
+    
 
     while(cmd[0] != NULL) {
         Clear(cmd);
@@ -28,6 +31,7 @@ int main() {
         }    
         else {
             Execute(cmd);
+                      
         }    
     }    
 }
@@ -60,7 +64,7 @@ void Clear(char* cmd[]) {
 void Execute(char* cmd[]) {
     pid_t pid;
     pid = fork();
-    switch(pid) {
+/*    switch(pid) {
         case -1:
             cout << "Fork Failure" << endl;
             exit(-1);
@@ -74,5 +78,29 @@ void Execute(char* cmd[]) {
         default: 
             wait(NULL);
             cout << "Child Finished" << endl;
+    }
+*/
+    if (pid < 0) {
+        perror("fork() error)");
+        exit(-1);
     }    
+    if (pid != 0) {
+//        printf("I'm the parent %d, my child is %d\n", getpid(), pid);
+        wait(NULL);
+    } 
+    else {
+//        printf ("I'm the parent %d, my child is %d\n", getpid(), getppid());
+        execvp(cmd[0], cmd);  
+        
+        if (execvp(cmd[0], cmd) == -1) {
+            cout << "Invalid command" << endl;
+            exit(0);
+        }
+        
+           
+    }              
+                            
 }
+
+
+
