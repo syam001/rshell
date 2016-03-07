@@ -62,6 +62,69 @@ void Clear(char* cmd[]) {
 } 
 
 void Execute(char* cmd[]) {
+    int i = 0, j = 0;
+
+   	while(cmd[i] != NULL) {
+   		if(strcmp(cmd[i], "test") == 0 || cmd[i] == "[" )
+		  {
+        struct stat info;
+			  switch(cmd[i+1][0])
+			  {
+          case '/':
+    			  	{
+    			  		if(stat(cmd[i+1], &info) == 0)
+    			  			cout<<"(True)"<<endl;
+    			  		else
+    						  cout<<"(False)"<<endl;
+    					i++;
+              j = i;   
+    					break;
+    				  }
+    			case '-':
+          {
+      			switch(cmd[i+1][1])
+      			{
+      			  	case 'e':
+      			  	{
+      			  		if(stat(cmd[i+2], &info) == 0)
+      			  			cout<<"(True)"<<endl;
+      			  		else
+      						  cout<<"(False)"<<endl;
+                i+= 2;
+      					j = i;
+      					break;
+      				}
+      
+      				case 'f':
+      				{
+      			  		if(stat(cmd[i+2], &info) == 0 && S_ISREG(info.st_mode))
+      			  			cout<<"(True)"<<endl;
+      			  		else
+      						  cout<<"(False)"<<endl;
+   					    i+= 2;
+                j = i;
+      					break;
+      				}
+      
+      				case 'd':
+      				{
+      			  		if(stat(cmd[i+2], &info) == 0 && S_ISDIR(info.st_mode))
+      			  			cout<<"(True)"<<endl;
+      			  		else
+      						  cout<<"(False)"<<endl;
+   					    i+= 2;
+                j = i;      
+      				break;
+      				}
+              default:
+ 					      cout<<"invalid command!"<<endl;
+			      }
+			    }
+		    }
+		  }
+		i++;
+	}
+
     pid_t pid;
     pid = fork();
 /*    switch(pid) {
